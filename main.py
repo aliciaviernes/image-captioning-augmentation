@@ -1,17 +1,7 @@
 from synonym_replacement import eda
 from backtranslate import backtranslation
+from contextual_t5 import *
 
-
-augmentations = set()
-
-backtranslated_1 = backtranslation(ground_truth, [0, 1])  # from Arabic
-backtranslated_2 = backtranslation(ground_truth, [0, 2])  # from Spanish
-fromEDA = eda(ground_truth)
-
-augmentations.add(backtranslated_1)
-augmentations.add(backtranslated_2)
-augmentations = augmentations.union(fromEDA)
-print(augmentations)
 
 def text_augmentation(sentence):
     backtrans_1 = backtranslation(sentence, [0, 1])
@@ -23,6 +13,18 @@ def text_augmentation(sentence):
     return augmentations
 
 
+def text_augmentation_batch(batch):
+    # includes T5 augmentation which happens batchwise 
+    # in this case batch == 5 sentences.
+    augmentations = set()
+    for sentence in batch:
+        augs = text_augmentation(sentence)
+        augmentations = augmentations.union(augs)
+    
+
+
+
 if __name__ == "__main__":
     ground_truth = "A man with a red shirt is napping under a tree and children are playing"
     augs = text_augmentation(ground_truth)
+    print(len(augs))
