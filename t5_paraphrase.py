@@ -28,9 +28,9 @@ tokenizer = T5Tokenizer.from_pretrained(paraphraser)
 # sentence = "Do apples taste better than oranges in general?"
 
 
-def t5_paraphrase(sentence, device, num_return_sequences=5):
+def t5_paraphrase(sentence, device=device, num_return_sequences=5):
     # 'preprocessing'
-    text = f"paraphrase: {sentence} </s>"
+    text = f"paraphrase: {sentence}"  # </s>
     # encode
     encoding = tokenizer.encode_plus(text, pad_to_max_length=True, return_tensors="pt")
     input_ids, attention_masks = encoding["input_ids"].to(device), encoding["attention_mask"].to(device)
@@ -44,17 +44,17 @@ def t5_paraphrase(sentence, device, num_return_sequences=5):
         early_stopping=True,
         num_return_sequences=num_return_sequences)
     # decode
-    final_outputs = list()
+    final_outputs = set()
     for beam_output in beam_outputs:
         sent = tokenizer.decode(beam_output, skip_special_tokens=True,clean_up_tokenization_spaces=True)
         if sent.lower() != sentence.lower() and sent not in final_outputs:
-            final_outputs.append(sent)
+            final_outputs.add(sent)
     
     return final_outputs
 
 
 if __name__ == "__main__":
-    print(time.time())
+    # print(time.time())
     sentence = "A man with a red shirt is napping under a tree and children are playing"
     final_outputs = t5_paraphrase(sentence, device)
 
