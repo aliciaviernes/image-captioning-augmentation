@@ -1,4 +1,5 @@
-# image-captioning-augmentation
+# Image Captioning Augmentation
+
 Augmentation methods for Image Captioning: Text, image, and joint.
 
 ## Text augmentation
