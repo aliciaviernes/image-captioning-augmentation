@@ -1,17 +1,18 @@
-# image-captioning-augmentation
+# Image Captioning Augmentation
+
 Augmentation methods for Image Captioning: Text, image, and joint.
 
 ## Text augmentation
 
-# Synonym Replacement
+### Synonym Replacement
 
 Based on EDA synonym replacement (with the help of WordNet).
 
-# Back-translation
+### Back-translation
 
 Translation from and to Spanish & Arabic. Needed model: argostranslate
 
-# T5: Paraphasing
+### T5: Paraphasing
 
 T5-powered paraphrasing with a finetuned model from Huggingface: `ramsrigouthamg/t5_paraphraser`
 
