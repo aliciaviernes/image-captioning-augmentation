@@ -16,23 +16,16 @@ def set_seed(seed):
 
 set_seed(42)
 
-device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = T5ForConditionalGeneration.from_pretrained(paraphraser).to(device)
 tokenizer = T5Tokenizer.from_pretrained(paraphraser)
-
-# model = model.to(device)
-
-# sentence = "Which course should I take to get started in data science?"
-# sentence = "What are the ingredients required to bake a perfect cake?"
-# sentence = "What is the best possible approach to learn aeronautical engineering?"
-# sentence = "Do apples taste better than oranges in general?"
 
 
 def t5_paraphrase(sentence, device=device, num_return_sequences=5):
     # 'preprocessing'
     text = f"paraphrase: {sentence}"  # </s>
     # encode
-    encoding = tokenizer.encode_plus(text, pad_to_max_length=True, return_tensors="pt")
+    encoding = tokenizer.encode_plus(text, padding=True, return_tensors="pt")
     input_ids, attention_masks = encoding["input_ids"].to(device), encoding["attention_mask"].to(device)
     # generate 
     beam_outputs = model.generate(
@@ -53,10 +46,42 @@ def t5_paraphrase(sentence, device=device, num_return_sequences=5):
     return final_outputs
 
 
-if __name__ == "__main__":
-    # print(time.time())
-    sentence = "A man with a red shirt is napping under a tree and children are playing"
-    final_outputs = t5_paraphrase(sentence, device)
+def t5_batchwise_paraphrase(batch_sentences, device=device, num_return_sequences=5):
+    # batch_sentences = ['this is one sentence', 'and this serves as a second sentence', 'the third sentence is here']
+    processed, augmented_batch = list(), list()
 
-    for i, final_output in enumerate(final_outputs):
-        print(f"{i}: {final_output}")
+    for sentence in batch_sentences:
+        if type(sentence) == list():
+            sentence = ' '.join(sentence)
+        txt = f"paraphrase: {sentence}"
+        # txt = tokenizer.encode(sentence, truncation=True, max_length=512)
+        processed.append(txt)
+    # encode
+    encoded_batch = tokenizer(processed, padding=True, add_special_tokens=True, return_tensors='pt')
+    input_ids, attention_masks = encoded_batch["input_ids"].to(device), encoded_batch["attention_mask"].to(device)
+    # generate 
+    beam_outputs = model.generate(
+        input_ids=input_ids, attention_mask=attention_masks,
+        do_sample=True,
+        max_length=256,
+        top_k=120,
+        top_p=0.98,
+        early_stopping=True,
+        num_return_sequences=5)
+        # decode and save
+    for i in range(len(beam_outputs)):
+        decoded = tokenizer.decode(beam_outputs[i])
+        augmented_batch.append(decoded)
+    
+    return augmented_batch
+
+
+if __name__ == "__main__":
+    
+    start_time = time.time()
+    
+    batch_sentences = ['this is one sentence', 'and this serves as a second sentence', 'the third sentence is here']
+    augmented_batch = t5_batchwise_paraphrase(batch_sentences=batch_sentences)
+
+    print("--- %s seconds ---" % (time.time() - start_time))
+    print(augmented_batch)
