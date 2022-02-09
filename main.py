@@ -27,7 +27,7 @@ def text_augmentation(sent_batch):
 def captions_augment(captions):  # function for show attend and tell
     for i in range(len(captions)): 
         captions[i] = ' '.join(captions[i])
-    return text_augmentation2(captions)
+    return text_augmentation(captions)
 
 
 if __name__ == "__main__":
