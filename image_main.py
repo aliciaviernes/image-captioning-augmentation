@@ -28,6 +28,7 @@ def image_transform(imgpath, save=True):
     aug_image = cv2.cvtColor(transform(image=image)['image'], cv2.COLOR_RGB2BGR)
     if save == True:
         cv2.imwrite(imgpath.replace('.jpg', '_aug.jpg'), aug_image)
+    return aug_image
 
 
 if __name__ == "__main__":
