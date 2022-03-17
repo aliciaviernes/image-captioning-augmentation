@@ -1,4 +1,6 @@
 argostranslate
+augmentations*
 __pycache__
 *.jpg
-vizwiz.py 
+vizwiz* 
+*.json

@@ -24,6 +24,23 @@ def text_augmentation(sent_batch):
     return paraphrases
 
 
+def text_augmentation_annotated(sent_batch):
+
+    paraphrases = t5_batchwise_paraphrase(sent_batch)
+    for i in range(len(paraphrases)):
+        paraphrases[i] = 'Paraphrase: ' + paraphrases[i]
+
+    for sentence in sent_batch:
+        bt1 = 'Backtranslation 1: ' + backtranslation(sentence, [0, 1])
+        bt2 = 'Backtranslation 2: ' + backtranslation(sentence, [0, 2])
+        sr = eda(sentence)
+        paraphrases.extend((bt1, bt2))
+        for aug in sr:
+            paraphrases.append('Synonym replacement: ' + aug)
+    
+    return paraphrases
+
+
 def captions_augment(captions):  # function for show attend and tell
     for i in range(len(captions)): 
         captions[i] = ' '.join(captions[i])
@@ -41,5 +58,4 @@ if __name__ == "__main__":
         ]
 
     start_time = time.time()
-    # do something
     print("--- %s seconds for something ---" % (time.time() - start_time))

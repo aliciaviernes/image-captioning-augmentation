@@ -1,15 +1,6 @@
 import albumentations as A
 import cv2
 
-"""
-# Declare an augmentation pipeline
-transform = A.Compose([
-    # A.RandomCrop(width=256, height=256),
-    A.HorizontalFlip(p=0.7),
-    A.RandomBrightnessContrast(p=0.7),
-    
-])
-"""
 
 def image_transform(imgpath, save=True):
     transform = A.Compose([
@@ -25,11 +16,16 @@ def image_transform(imgpath, save=True):
     ])
 
     image = cv2.cvtColor(cv2.imread(imgpath), cv2.COLOR_BGR2RGB) 
-    aug_image = cv2.cvtColor(transform(image=image)['image'], cv2.COLOR_RGB2BGR)
+    
+    transformed = transform(image=image)
+    transformed_image = cv2.cvtColor(transformed['image'], cv2.COLOR_RGB2BGR)
+    
     if save == True:
-        cv2.imwrite(imgpath.replace('.jpg', '_aug.jpg'), aug_image)
-    return aug_image
+        cv2.imwrite(imgpath.replace('.jpg', '_aug.jpg'), transformed_image)
+    
+    return transformed_image
 
 
 if __name__ == "__main__":
-    image_transform('./image.jpg')
+    i = image_transform('./image.jpg')
+    print(i.shape)
