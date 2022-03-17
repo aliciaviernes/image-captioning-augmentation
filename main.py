@@ -1,6 +1,6 @@
-from synonym_replacement import eda
-from backtranslate import backtranslation
-from t5_paraphrase import t5_batchwise_paraphrase
+from .synonym_replacement import eda
+from .backtranslate import backtranslation
+from .t5_paraphrase import t5_batchwise_paraphrase
 from nltk.tokenize import RegexpTokenizer
 import time
 
