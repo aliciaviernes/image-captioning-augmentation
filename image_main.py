@@ -1,6 +1,10 @@
 import albumentations as A
 import cv2
 
+"""
+    Potential future fix:
+    Image input instead of path input.
+"""
 
 def image_transform(imgpath, save=True):
     transform = A.Compose([
