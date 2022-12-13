@@ -1,6 +1,7 @@
-from .synonym_replacement import eda
-from .backtranslate import backtranslation
-from .t5_paraphrase import t5_batchwise_paraphrase
+from synonym_replacement import eda
+from backtranslate import backtranslation
+# from .t5_paraphrase import t5_batchwise_paraphrase
+from pegasus_paraphrase import pegasus
 from nltk.tokenize import RegexpTokenizer
 import time
 
@@ -20,6 +21,19 @@ def text_augmentation(sent_batch):
         sr = eda(sentence)
         paraphrases.extend((bt1, bt2))
         paraphrases.extend(list(sr))
+
+    return paraphrases
+
+
+def text_augmentation2(sentence):
+    
+    paraphrases = pegasus(sentence, 5)
+
+    bt1 = backtranslation(sentence, [0, 1])
+    bt2 = backtranslation(sentence, [0, 2])
+    sr = eda(sentence)
+    paraphrases.extend((bt1, bt2))
+    paraphrases.extend(list(sr))
 
     return paraphrases
 
@@ -47,6 +61,10 @@ def captions_augment(captions):  # function for show attend and tell
     return text_augmentation(captions)
 
 
+def captions_augment2(caption):  # function for show attend and tell
+    return text_augmentation2(' '.join(caption))
+
+
 if __name__ == "__main__":
     
     captions = [
@@ -56,6 +74,12 @@ if __name__ == "__main__":
         ['there', 'is', 'a', 'woman', 'that', 'is', 'cutting', 'a', 'white', 'cake'], 
         ['a', 'woman', 'marking', 'a', 'cake', 'with', 'the', 'back', 'of', 'a', 'chefs', 'knife']
         ]
+
+    
+    for i in range(len(captions)):
+        print(i)
+        print(captions_augment(captions[i]))
+
 
     start_time = time.time()
     print("--- %s seconds for something ---" % (time.time() - start_time))

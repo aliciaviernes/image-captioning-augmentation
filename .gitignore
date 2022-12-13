@@ -1,6 +1,10 @@
 argostranslate
 augmentations*
-__pycache__
+
+# Dirs
+**__pycache__**
+**paraphrasing_tests**
+
 *.jpg
 vizwiz* 
 *.json

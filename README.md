@@ -6,15 +6,18 @@ Augmentation methods for Image Captioning: Text, image, and joint.
 
 ### Synonym Replacement
 
-Based on EDA synonym replacement (with the help of WordNet).
+Based on EDA synonym replacement (with the help of [WordNet](https://wordnet.princeton.edu/)).
 
 ### Back-translation
 
-Translation from and to Spanish & Arabic. Needed model: argostranslate
+Translation from and to Spanish & Arabic. Needed model: [argostranslate](https://github.com/argosopentech/argos-translate)
 
-### T5: Paraphasing
+1. Create a directory `argostranslate`.
+2. Download the models specified in `backtranslate.py`.
 
-T5-powered paraphrasing with a finetuned model from Huggingface: `ramsrigouthamg/t5_paraphraser`
+### Pegasus Paraphrase
+
+T5-powered paraphrasing with a finetuned model from Huggingface: `tuner007/pegasus_paraphrase`
 
 ## Image augmentation
 
